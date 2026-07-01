@@ -1,0 +1,27 @@
+{
+  "vendor_id": "dataquick-003",
+  "company_name": "DataQuick Analytics GmbH",
+  "registration_number": "DQ-2022-119043",
+  "founded": "2022",
+  "headquarters": "Berlin, Germany",
+  "employees": 32,
+  "service_type": "Data Analytics and Enrichment Platform",
+  "data_access": "Full access to customer database exports including PII fields",
+  "annual_revenue_usd": 800000,
+  "risk_tier": "HIGH",
+  "documents_provided": [
+    "security_questionnaire.txt",
+    "privacy_policy.txt"
+  ],
+  "missing_documents": [
+    "Penetration test report",
+    "GDPR Data Processing Agreement",
+    "ISO 27001 or equivalent certification",
+    "Subprocessor list"
+  ],
+  "contacts": {
+    "primary": "Klaus Weber <k.weber@dataquick.de>",
+    "security": "security@dataquick.de",
+    "incident_response": "NOT PROVIDED"
+  }
+}

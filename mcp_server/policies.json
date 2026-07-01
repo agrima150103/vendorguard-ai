@@ -1,0 +1,112 @@
+{
+  "policy_version": "2.1",
+  "effective_date": "2024-01-01",
+  "owner": "Information Security Team",
+  "rules": [
+    {
+      "rule_id": "SEC-001",
+      "name": "Encryption at rest",
+      "requirement": "Provide encryption algorithm and key-management evidence.",
+      "severity": "high",
+      "applies_to": [
+        "all"
+      ]
+    },
+    {
+      "rule_id": "SEC-002",
+      "name": "Encryption in transit",
+      "requirement": "Use TLS 1.2 or higher.",
+      "severity": "high",
+      "applies_to": [
+        "all"
+      ]
+    },
+    {
+      "rule_id": "IR-001",
+      "name": "Incident response contact",
+      "requirement": "Provide a dedicated security contact.",
+      "severity": "high",
+      "applies_to": [
+        "all"
+      ]
+    },
+    {
+      "rule_id": "IR-002",
+      "name": "Incident response plan",
+      "requirement": "Maintain a documented plan and a 72-hour notification commitment.",
+      "severity": "high",
+      "applies_to": [
+        "all"
+      ]
+    },
+    {
+      "rule_id": "RET-001",
+      "name": "Retention consistency",
+      "requirement": "Retention statements must be consistent.",
+      "severity": "medium",
+      "applies_to": [
+        "all"
+      ]
+    },
+    {
+      "rule_id": "PAY-001",
+      "name": "PCI-DSS",
+      "requirement": "Payment vendors need current PCI-DSS evidence.",
+      "severity": "critical",
+      "applies_to": [
+        "payment"
+      ]
+    },
+    {
+      "rule_id": "GDPR-001",
+      "name": "GDPR DPA",
+      "requirement": "PII processors need a signed DPA.",
+      "severity": "critical",
+      "applies_to": [
+        "high_data_access"
+      ]
+    },
+    {
+      "rule_id": "HITL-001",
+      "name": "Human approval",
+      "requirement": "Every recommendation requires a recorded human decision.",
+      "severity": "critical",
+      "applies_to": [
+        "all"
+      ]
+    },
+    {
+      "rule_id": "DOC-001",
+      "name": "Document completeness",
+      "requirement": "Mandatory documents must be supplied.",
+      "severity": "high",
+      "applies_to": [
+        "all"
+      ]
+    }
+  ],
+  "mandatory_documents": {
+    "all_vendors": [
+      "Security questionnaire",
+      "Privacy policy"
+    ],
+    "payment_vendors": [
+      "PCI-DSS certificate or SAQ",
+      "Incident response plan"
+    ],
+    "pii_vendors": [
+      "GDPR Data Processing Agreement",
+      "Subprocessor list"
+    ],
+    "high_risk_vendors": [
+      "Penetration test report",
+      "ISO 27001 or SOC 2 Type II report"
+    ]
+  },
+  "risk_thresholds": {
+    "approve_max_score": 25,
+    "approve_with_conditions_max_score": 45,
+    "request_information_max_score": 70,
+    "escalate_min_score": 71
+  }
+}

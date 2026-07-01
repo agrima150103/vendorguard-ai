@@ -1,0 +1,4 @@
+CLOUDNOVA SOLUTIONS — SOC 2 TYPE II SUMMARY
+Audit period: October 2023 to September 2024
+The independent auditor reported effective controls for security, availability and
+confidentiality. No exceptions were recorded for logical access or encryption.

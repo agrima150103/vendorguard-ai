@@ -1,0 +1,10 @@
+DATAQUICK ANALYTICS — PRIVACY POLICY
+Last updated: November 2024
+
+DataQuick processes names, email addresses, purchase history and behavioural data.
+Processed insights may be shared with analytics partners.
+Customer data exports are deleted after 12 months.
+Deletion requests are completed within 90 days, while anonymised aggregate data may
+be retained indefinitely for model training.
+A GDPR Data Processing Agreement is still in progress.
+Contact: privacy@dataquick.de

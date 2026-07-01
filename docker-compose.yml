@@ -1,0 +1,23 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DB_PATH: /data/vendorguard.db
+      CORS_ORIGINS: http://localhost:5173
+    volumes:
+      - vendorguard_data:/data
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
+volumes:
+  vendorguard_data:

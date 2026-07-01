@@ -1,0 +1,20 @@
+PAYSPHERE TECHNOLOGIES — SECURITY QUESTIONNAIRE
+Completed: February 2025
+
+Q1: Do you encrypt data at rest?
+A: Yes, we use encryption for our databases.
+
+Q2: Do you encrypt data in transit?
+A: HTTPS is used for all API endpoints.
+
+Q3: What is your data retention policy?
+A: Transaction data is retained for 5 years.
+
+Q4: Do you have an incident response plan?
+A: Procedures are being formalised and are not yet approved.
+
+Q5: Are you PCI-DSS certified?
+A: We are in pre-assessment and are not yet certified.
+
+Q6: Security contact?
+A: Contact the CEO until a security employee is hired.

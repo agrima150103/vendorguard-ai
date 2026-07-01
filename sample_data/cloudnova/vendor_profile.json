@@ -1,0 +1,23 @@
+{
+  "vendor_id": "cloudnova-001",
+  "company_name": "CloudNova Solutions Ltd",
+  "registration_number": "CN-2019-887432",
+  "founded": "2019",
+  "headquarters": "Dublin, Ireland",
+  "employees": 240,
+  "service_type": "Cloud Infrastructure Provider",
+  "data_access": "Infrastructure metadata only — no customer PII",
+  "annual_revenue_usd": 12000000,
+  "risk_tier": "LOW",
+  "documents_provided": [
+    "security_questionnaire.txt",
+    "privacy_policy.txt",
+    "soc2_summary.txt"
+  ],
+  "missing_documents": [],
+  "contacts": {
+    "primary": "Niamh O'Brien <niamh@cloudnova.io>",
+    "security": "sec-team@cloudnova.io",
+    "incident_response": "incidents@cloudnova.io"
+  }
+}

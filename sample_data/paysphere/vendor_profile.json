@@ -1,0 +1,26 @@
+{
+  "vendor_id": "paysphere-002",
+  "company_name": "PaySphere Technologies Inc",
+  "registration_number": "PS-2021-334821",
+  "founded": "2021",
+  "headquarters": "Singapore",
+  "employees": 85,
+  "service_type": "Payment Processing Gateway",
+  "data_access": "Transaction data including cardholder names and masked card numbers",
+  "annual_revenue_usd": 3200000,
+  "risk_tier": "MEDIUM",
+  "documents_provided": [
+    "security_questionnaire.txt",
+    "privacy_policy.txt"
+  ],
+  "missing_documents": [
+    "PCI-DSS certificate or SAQ",
+    "Incident response plan",
+    "Subprocessor list"
+  ],
+  "contacts": {
+    "primary": "Rajesh Kumar <raj@paysphere.io>",
+    "security": "NOT PROVIDED",
+    "incident_response": "NOT PROVIDED"
+  }
+}
