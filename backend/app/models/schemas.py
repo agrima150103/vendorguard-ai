@@ -146,7 +146,8 @@ class AssessmentRecommendation(StrictModel):
 
 class HumanDecision(StrictModel):
     assessment_id: str
-    reviewer_id: str
+    reviewer_name: str = Field(min_length=2)
+    reviewer_role: str = Field(min_length=2)
     decision: HumanDecisionValue
     reason: str = Field(min_length=3)
     conditions: list[str] = Field(default_factory=list)
@@ -190,7 +191,8 @@ class StartAssessmentRequest(StrictModel):
 
 
 class HumanReviewRequest(StrictModel):
-    reviewer_id: str = "demo-reviewer"
+    reviewer_name: str = Field(min_length=2)
+    reviewer_role: str = Field(min_length=2)
     decision: HumanDecisionValue
     reason: str = Field(min_length=3)
     conditions: list[str] = Field(default_factory=list)
@@ -208,7 +210,10 @@ class AssessmentSummary(StrictModel):
     vendor_id: str
     vendor_name: str
     risk_tier: RiskTier
+    risk_score: int | None = None
     status: AssessmentStatus
     recommendation: RecommendationDecision | None = None
+    pipeline_mode: Literal["ADK", "FALLBACK", "DETERMINISTIC", "UNKNOWN"] = "UNKNOWN"
     created_at: datetime
     updated_at: datetime
+    reviewed_at: datetime | None = None
