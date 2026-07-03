@@ -1,8 +1,8 @@
 """
 VendorGuard AI application configuration.
 
-Supports local SQLite development and PostgreSQL/Supabase production through
-one DATABASE_URL setting.
+This module loads environment settings and resolves filesystem paths
+consistently regardless of the directory from which the backend is run.
 """
 
 from __future__ import annotations
@@ -13,6 +13,10 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+# backend/app/config.py
+# parents[0] -> backend/app
+# parents[1] -> backend
+# parents[2] -> project root: vendorguard-ai-complete
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -41,14 +45,10 @@ class Settings(BaseSettings):
         alias="GEMINI_MODEL",
     )
 
+    # These may be absolute paths or paths relative to the project root.
     db_path: str = Field(
         default="vendorguard.db",
         alias="DB_PATH",
-    )
-
-    database_url: str = Field(
-        default="",
-        alias="DATABASE_URL",
     )
 
     sample_data_path: str = Field(
@@ -61,9 +61,7 @@ class Settings(BaseSettings):
             "http://localhost:5173,"
             "http://127.0.0.1:5173,"
             "http://localhost:5174,"
-            "http://127.0.0.1:5174,"
-            "http://localhost:4173,"
-            "http://127.0.0.1:4173"
+            "http://127.0.0.1:5174"
         ),
         alias="CORS_ORIGINS",
     )
@@ -75,7 +73,10 @@ class Settings(BaseSettings):
 
     @staticmethod
     def _resolve_project_path(value: str) -> Path:
-        """Resolve absolute paths directly and relative paths from project root."""
+        """
+        Resolve an absolute path directly, or resolve a relative path
+        from the VendorGuard project root.
+        """
 
         path = Path(value).expanduser()
 
@@ -86,7 +87,7 @@ class Settings(BaseSettings):
 
     @property
     def resolved_db_path(self) -> Path:
-        """Absolute path of the local SQLite database file."""
+        """Absolute path of the SQLite database file."""
 
         return self._resolve_project_path(self.db_path)
 
@@ -98,7 +99,7 @@ class Settings(BaseSettings):
 
     @property
     def cors_origin_list(self) -> list[str]:
-        """Return configured CORS origins as a cleaned list."""
+        """Return configured CORS origins as a clean list."""
 
         return [
             origin.strip().rstrip("/")
@@ -108,57 +109,11 @@ class Settings(BaseSettings):
 
     @property
     def cors_origins_list(self) -> list[str]:
-        """Backward-compatible alias used by older files."""
+        """
+        Backward-compatible name used by older VendorGuard files.
+        """
 
         return self.cors_origin_list
-
-    @property
-    def sqlalchemy_database_url(self) -> str:
-        """
-        Return a SQLAlchemy-compatible database URL.
-
-        Local default:
-            sqlite:///...
-
-        Production Supabase:
-            postgresql+psycopg://...
-        """
-
-        raw_url = self.database_url.strip()
-
-        if not raw_url:
-            return f"sqlite:///{self.resolved_db_path.as_posix()}"
-
-        if raw_url.startswith("postgresql://"):
-            raw_url = raw_url.replace(
-                "postgresql://",
-                "postgresql+psycopg://",
-                1,
-            )
-
-        if raw_url.startswith("postgres://"):
-            raw_url = raw_url.replace(
-                "postgres://",
-                "postgresql+psycopg://",
-                1,
-            )
-
-        if (
-            raw_url.startswith("postgresql+psycopg://")
-            and "sslmode=" not in raw_url
-        ):
-            separator = "&" if "?" in raw_url else "?"
-            raw_url = f"{raw_url}{separator}sslmode=require"
-
-        return raw_url
-
-    @property
-    def using_postgres(self) -> bool:
-        """Return True when the configured database is PostgreSQL."""
-
-        return self.sqlalchemy_database_url.startswith(
-            "postgresql+psycopg://"
-        )
 
 
 settings = Settings()
