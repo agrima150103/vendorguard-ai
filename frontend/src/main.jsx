@@ -1,8 +1,17 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+
+import App from "./App.jsx";
 import "./styles.css";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode><App /></React.StrictMode>
+
+const rootElement = document.getElementById("root");
+
+if (!rootElement) {
+  throw new Error(
+    'VendorGuard could not start because the HTML element with id="root" was not found.',
+  );
+}
+
+ReactDOM.createRoot(rootElement).render(
+  <App />,
 );

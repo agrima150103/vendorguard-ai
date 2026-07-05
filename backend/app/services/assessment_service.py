@@ -871,7 +871,8 @@ def submit_human_review(
 
     assessment.human_decision = HumanDecision(
         assessment_id=assessment_id,
-        reviewer_id=request.reviewer_id,
+        reviewer_name=request.reviewer_name,
+        reviewer_role=request.reviewer_role,
         decision=request.decision,
         reason=request.reason,
         conditions=request.conditions,
@@ -884,7 +885,7 @@ def submit_human_review(
     assessment.add_audit_entry(
         "HUMAN_DECISION_RECORDED",
         (
-            f"Reviewer {request.reviewer_id} "
+            f"{request.reviewer_name} ({request.reviewer_role}) "
             f"recorded {request.decision.value}."
         ),
     )

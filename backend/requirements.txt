@@ -7,3 +7,6 @@ google-adk>=1.0,<2
 mcp>=1.27,<2
 pytest>=8.4,<9
 httpx>=0.28,<1
+SQLAlchemy>=2,<3
+psycopg[binary]>=3,<4
+gunicorn>=22,<24

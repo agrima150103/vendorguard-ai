@@ -179,6 +179,7 @@ export default function HomePage({
   loading,
   startingVendorId,
   onSelect,
+  onOpenHistory,
 }) {
   const [theme, setTheme] = useState(
     getInitialTheme,
@@ -256,6 +257,7 @@ export default function HomePage({
         theme={theme}
         activeSection={activeSection}
         onToggleTheme={toggleTheme}
+        onOpenHistory={onOpenHistory}
       />
 
       <Hero />
@@ -285,6 +287,7 @@ function SiteNav({
   theme,
   activeSection,
   onToggleTheme,
+  onOpenHistory,
 }) {
   return (
     <header className="vg-nav">
@@ -327,6 +330,14 @@ function SiteNav({
         </nav>
 
         <div className="vg-nav-actions">
+          <button
+            type="button"
+            className="vg-nav-cta"
+            onClick={onOpenHistory}
+          >
+            Assessments
+          </button>
+
           <button
             type="button"
             className="vg-theme-toggle"

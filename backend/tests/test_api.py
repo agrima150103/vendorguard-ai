@@ -52,7 +52,8 @@ def test_dataquick_injection_and_human_gate(client):
     review_response = client.post(
         f"/api/v1/assessments/{assessment_id}/review",
         json={
-            "reviewer_id": "test-reviewer",
+            "reviewer_name": "Test Reviewer",
+            "reviewer_role": "Security Reviewer",
             "decision": "INFORMATION_REQUESTED",
             "reason": (
                 "Resolve contradictory retention statements and provide "
@@ -86,7 +87,8 @@ def test_cannot_review_twice(client):
     assessment_id = create_response.json()["assessment_id"]
 
     review_payload = {
-        "reviewer_id": "test-reviewer",
+        "reviewer_name": "Test Reviewer",
+        "reviewer_role": "Security Reviewer",
         "decision": "APPROVED",
         "reason": (
             "The fictional low-risk vendor supplied sufficient evidence."
@@ -112,3 +114,45 @@ def test_cannot_review_twice(client):
         second_review.json()["detail"]
         == "Assessment is not awaiting human review."
     )
+
+def test_assessment_history_contains_risk_and_pipeline(client):
+    create_response = client.post(
+        "/api/v1/assessments",
+        json={"vendor_id": "cloudnova-001"},
+    )
+    assert create_response.status_code == 201
+
+    response = client.get("/api/v1/assessments")
+    assert response.status_code == 200
+    items = response.json()
+    created_id = create_response.json()["assessment_id"]
+    summary = next(item for item in items if item["assessment_id"] == created_id)
+
+    assert summary["risk_score"] == 10
+    assert summary["pipeline_mode"] in {"ADK", "FALLBACK", "DETERMINISTIC", "UNKNOWN"}
+    assert summary["status"] == "AWAITING_HUMAN_REVIEW"
+
+
+def test_review_records_identity_and_backend_timestamp(client):
+    create_response = client.post(
+        "/api/v1/assessments",
+        json={"vendor_id": "cloudnova-001"},
+    )
+    assessment_id = create_response.json()["assessment_id"]
+
+    response = client.post(
+        f"/api/v1/assessments/{assessment_id}/review",
+        json={
+            "reviewer_name": "Agrima Saxena",
+            "reviewer_role": "Security Reviewer",
+            "decision": "APPROVED",
+            "reason": "The available evidence supports approval.",
+            "conditions": [],
+        },
+    )
+
+    assert response.status_code == 200
+    decision = response.json()["human_decision"]
+    assert decision["reviewer_name"] == "Agrima Saxena"
+    assert decision["reviewer_role"] == "Security Reviewer"
+    assert decision["decision_timestamp"]

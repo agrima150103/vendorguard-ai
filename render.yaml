@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: vendorguard-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: GOOGLE_GENAI_USE_VERTEXAI
+        value: "FALSE"
+      - key: ENABLE_ADK
+        value: "true"
+      - key: GEMINI_MODEL
+        value: "gemini-2.5-flash-lite"
+      - key: SAMPLE_DATA_PATH
+        value: "sample_data"
+      - key: LOG_LEVEL
+        value: "INFO"
+      - key: CORS_ORIGINS
+        value: "http://localhost:5173,http://127.0.0.1:5173"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false

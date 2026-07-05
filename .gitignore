@@ -1,45 +1,41 @@
-# Secrets and environment variables
+# Environment variables and secrets
 .env
 .env.*
 !.env.example
+backend/.env
+frontend/.env
+frontend/.env.local
+frontend/.env.production.local
 
 # Python
 .venv/
 venv/
 __pycache__/
 *.py[cod]
-*.pyo
 .pytest_cache/
+.mypy_cache/
 .coverage
 htmlcov/
 
-# Node / React
-node_modules/
-frontend/node_modules/
-frontend/dist/
-dist/
-
-# Databases
+# SQLite and local databases
 *.db
 *.db-shm
 *.db-wal
-*.sqlite
-*.sqlite3
+database-backups/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+node_modules/
+dist/
 
 # Logs
 *.log
-logs/
 
-# IDE and operating system
+# Editors
 .vscode/
 .idea/
+
+# Operating system
 .DS_Store
 Thumbs.db
-
-# Build and cache files
-.cache/
-*.egg-info/
-build/
-
-# Evaluation-generated results
-evaluations/latest_results.json

@@ -7,6 +7,7 @@ import {
   submitReview,
 } from "./api";
 
+import AssessmentHistory from "./AssessmentHistory";
 import HomePage from "./HomePage";
 import "./styles.css";
 
@@ -1041,14 +1042,15 @@ function HumanReviewPanel({
   submitting,
   onSubmit,
 }) {
+  const [reviewerName, setReviewerName] = useState("");
+  const [reviewerRole, setReviewerRole] = useState("");
   const [decision, setDecision] = useState(
     "INFORMATION_REQUESTED",
   );
-
   const [reason, setReason] = useState("");
   const [conditions, setConditions] = useState("");
-  const [validationError, setValidationError] =
-    useState("");
+  const [validationError, setValidationError] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const decisionOptions = [
     {
@@ -1072,6 +1074,13 @@ function HumanReviewPanel({
   function handleSubmit(event) {
     event.preventDefault();
 
+    if (!reviewerName.trim() || !reviewerRole.trim()) {
+      setValidationError(
+        "Reviewer name and reviewer role are required.",
+      );
+      return;
+    }
+
     if (!reason.trim()) {
       setValidationError(
         "Please explain the evidence and policy basis for your decision.",
@@ -1080,24 +1089,30 @@ function HumanReviewPanel({
     }
 
     if (
-      decision === "APPROVED_WITH_CONDITIONS" &&
+      (decision === "APPROVED_WITH_CONDITIONS" ||
+        decision === "INFORMATION_REQUESTED") &&
       !conditions.trim()
     ) {
       setValidationError(
-        "Conditional approval requires at least one condition.",
+        "Add at least one condition or required-information item.",
       );
       return;
     }
 
     setValidationError("");
+    setShowConfirmation(true);
+  }
 
+  function confirmDecision() {
     const conditionList = conditions
       .split("\n")
       .map((item) => item.trim())
       .filter(Boolean);
 
+    setShowConfirmation(false);
     onSubmit({
-      reviewer_id: "demo-reviewer",
+      reviewer_name: reviewerName.trim(),
+      reviewer_role: reviewerRole.trim(),
       decision,
       reason: reason.trim(),
       conditions: conditionList,
@@ -1148,6 +1163,28 @@ function HumanReviewPanel({
           outcome.
         </p>
       </div>
+
+      <label style={labelStyle}>
+        Reviewer name
+      </label>
+
+      <input
+        value={reviewerName}
+        onChange={(event) => setReviewerName(event.target.value)}
+        placeholder="e.g. Agrima Saxena"
+        style={inputStyle}
+      />
+
+      <label style={labelStyle}>
+        Reviewer role
+      </label>
+
+      <input
+        value={reviewerRole}
+        onChange={(event) => setReviewerRole(event.target.value)}
+        placeholder="e.g. Security Reviewer"
+        style={inputStyle}
+      />
 
       <label style={labelStyle}>
         Decision
@@ -1221,6 +1258,25 @@ function HumanReviewPanel({
         >
           {validationError}
         </p>
+      )}
+
+      {showConfirmation && (
+        <div className="review-modal-backdrop" role="presentation">
+          <div className="review-modal" role="dialog" aria-modal="true" aria-labelledby="review-confirm-title">
+            <h3 id="review-confirm-title">Confirm human decision</h3>
+            <p><strong>Reviewer:</strong> {reviewerName} — {reviewerRole}</p>
+            <p><strong>Decision:</strong> {formatLabel(decision)}</p>
+            <p>This decision becomes part of the permanent audit trail and cannot be directly edited.</p>
+            <div className="review-modal-actions">
+              <button type="button" className="secondary" onClick={() => setShowConfirmation(false)}>
+                Cancel
+              </button>
+              <button type="button" onClick={confirmDecision}>
+                Confirm decision
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <button
@@ -1350,7 +1406,11 @@ function CompletedDecision({ assessment }) {
             fontSize: 11,
           }}
         >
-          Reviewer: {decision.reviewer_id || "Unknown"}
+          Reviewer: {decision.reviewer_name || "Unknown"}
+          {decision.reviewer_role ? ` — ${decision.reviewer_role}` : ""}
+          {decision.decision_timestamp
+            ? ` · ${new Date(decision.decision_timestamp).toLocaleString()}`
+            : ""}
         </p>
       </div>
     </div>
@@ -1378,6 +1438,7 @@ function EmptyState({ text }) {
 
 function AssessmentPage({
   vendor,
+  existingAssessmentId = null,
   onBack,
 }) {
   const [assessment, setAssessment] =
@@ -1398,14 +1459,14 @@ function AssessmentPage({
   useEffect(() => {
     let active = true;
 
-    async function createAssessment() {
+    async function loadAssessment() {
       try {
         setLoading(true);
         setError("");
 
-        const result = await startAssessment(
-          vendor.vendor_id,
-        );
+        const result = existingAssessmentId
+          ? await getAssessment(existingAssessmentId)
+          : await startAssessment(vendor.vendor_id);
 
         if (active) {
           setAssessment(result);
@@ -1415,7 +1476,9 @@ function AssessmentPage({
 
         if (active) {
           setError(
-            "The assessment could not be started. Confirm that the backend is running on port 8000.",
+            existingAssessmentId
+              ? "The saved assessment could not be loaded."
+              : "The assessment could not be started. Confirm that the backend is running on port 8000.",
           );
         }
       } finally {
@@ -1425,12 +1488,12 @@ function AssessmentPage({
       }
     }
 
-    createAssessment();
+    loadAssessment();
 
     return () => {
       active = false;
     };
-  }, [vendor.vendor_id]);
+  }, [vendor.vendor_id, existingAssessmentId]);
 
   async function handleReview(reviewPayload) {
     if (!assessment) {
@@ -1947,7 +2010,7 @@ function AssessmentPage({
                   marginTop: 20,
                 }}
               >
-                Refresh assessment
+                Refresh status
               </button>
             </div>
           )}
@@ -2002,55 +2065,67 @@ function AssessmentPage({
 }
 
 export default function App() {
-  const [vendors, setVendors] =
-    useState([]);
-
-  const [vendorsLoading, setVendorsLoading] =
-    useState(true);
-
-  const [selectedVendor, setSelectedVendor] =
-    useState(null);
-
-  const [startingVendorId, setStartingVendorId] =
-    useState("");
+  const [vendors, setVendors] = useState([]);
+  const [vendorsLoading, setVendorsLoading] = useState(true);
+  const [view, setView] = useState("home");
+  const [selectedVendor, setSelectedVendor] = useState(null);
+  const [selectedAssessmentId, setSelectedAssessmentId] = useState(null);
+  const [startingVendorId, setStartingVendorId] = useState("");
 
   useEffect(() => {
     async function loadVendors() {
       try {
-        const result = await getVendors();
-        setVendors(result);
+        setVendors(await getVendors());
       } catch (error) {
-        console.error(
-          "Could not load vendors:",
-          error,
-        );
-
+        console.error("Could not load vendors:", error);
         setVendors([]);
       } finally {
         setVendorsLoading(false);
       }
     }
-
     loadVendors();
   }, []);
+
+  function goHome() {
+    setView("home");
+    setSelectedVendor(null);
+    setSelectedAssessmentId(null);
+    setStartingVendorId("");
+  }
 
   function handleVendorSelection(vendor) {
     setStartingVendorId(vendor.vendor_id);
     setSelectedVendor(vendor);
-
-    window.setTimeout(() => {
-      setStartingVendorId("");
-    }, 500);
+    setSelectedAssessmentId(null);
+    setView("assessment");
+    window.setTimeout(() => setStartingVendorId(""), 500);
   }
 
-  if (selectedVendor) {
+  function handleOpenAssessment(summary) {
+    setSelectedVendor({
+      vendor_id: summary.vendor_id,
+      name: summary.vendor_name,
+      risk_tier: summary.risk_tier,
+    });
+    setSelectedAssessmentId(summary.assessment_id);
+    setView("assessment");
+  }
+
+  if (view === "history") {
+    return (
+      <AssessmentHistory
+        onBack={goHome}
+        onOpenAssessment={handleOpenAssessment}
+      />
+    );
+  }
+
+  if (view === "assessment" && selectedVendor) {
     return (
       <AssessmentPage
         vendor={selectedVendor}
-        onBack={() => {
-          setSelectedVendor(null);
-          setStartingVendorId("");
-        }}
+        existingAssessmentId={selectedAssessmentId}
+        onBack={() => setView("history")}
       />
     );
   }
@@ -2061,6 +2136,7 @@ export default function App() {
       loading={vendorsLoading}
       startingVendorId={startingVendorId}
       onSelect={handleVendorSelection}
+      onOpenHistory={() => setView("history")}
     />
   );
 }
