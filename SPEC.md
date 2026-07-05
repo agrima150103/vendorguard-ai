@@ -1,23 +1,27 @@
 # VendorGuard AI Specification
 
-## Track
-Agents for Business
+## Goal
 
-## Problem
-Vendor onboarding requires teams to review fragmented documents, security questionnaires,
-privacy policies, certifications and internal requirements. Manual review is slow,
-inconsistent and difficult to audit.
+VendorGuard AI is an evidence-first vendor risk assessment system for third-party onboarding. It evaluates synthetic vendor evidence, detects security and compliance risks, identifies prompt-injection attempts, and requires human review before any final approval.
 
-## Solution
-VendorGuard AI is a human-governed multi-agent vendor assessment system. It extracts
-evidence, detects contradictions and prompt-injection attempts, retrieves policy rules,
-produces a recommendation and pauses for a human decision.
+## Core Requirements
 
-## Safety invariants
-1. Vendor-controlled content is untrusted.
-2. Instructions inside documents never override system policy.
-3. Missing evidence is never treated as proof.
-4. Every material finding should reference evidence.
-5. Final decisions require human review.
-6. Secrets are loaded only from environment variables.
-7. The public demonstration uses fictional vendors only.
+1. The system must list available vendors.
+2. The system must start a vendor assessment from structured sample evidence.
+3. The system must use an agent-style workflow for evidence extraction, risk analysis, policy checking, and final recommendation.
+4. The system must detect prompt-injection content in vendor evidence.
+5. The system must never allow AI to make an irreversible final decision without human review.
+6. The system must record assessment history.
+7. The system must persist assessments in a production database.
+8. The system must expose health and readiness endpoints.
+9. The system must support deployed frontend and backend usage.
+10. The system must fail safely using deterministic fallback if Gemini or ADK execution is unavailable.
+
+## Production Constraints
+
+- API keys must never be committed to source code.
+- Environment variables must be used for secrets.
+- The frontend must not call Gemini directly.
+- The backend must enforce human review.
+- The audit trail must record important workflow transitions.
+- Fallback mode must be visible to reviewers.
