@@ -39,3 +39,4 @@ dist/
 # Operating system
 .DS_Store
 Thumbs.db
+.firebase/
