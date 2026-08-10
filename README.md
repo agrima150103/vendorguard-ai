@@ -1,138 +1,124 @@
-<div align="center">
+# 🛡️ VendorGuard AI
 
-# VendorGuard AI
+### Human-Governed Multi-Agent Vendor Risk Assessment Platform
 
-**Human-governed, evidence-first vendor risk assessment, built for the Kaggle × Google 5-Day AI Agents Intensive Capstone**
+[![Live Demo](https://img.shields.io/badge/Live_Demo-VendorGuard_AI-20C997?style=for-the-badge)](https://vendorguard-web.web.app/)
+[![GitHub](https://img.shields.io/badge/Source_Code-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/agrima150103/vendorguard-ai)
+[![Google AI Agents](https://img.shields.io/badge/Google-5--Day_AI_Agents_Intensive-4285F4?style=for-the-badge&logo=google)](https://developers.google.com/profile/badges/events/cloud/five-day-ai-agents)
 
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/agrima150103/vendorguard-ai)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-vendorguard--web-00C896?style=for-the-badge&logo=firebase)](https://vendorguard-web.web.app/)
-[![Google Cloud Skills Badge](https://img.shields.io/badge/Google%20Cloud-5--Day%20AI%20Agents%20Badge-4285F4?style=for-the-badge&logo=googlecloud)](https://developers.google.com/profile/badges/events/cloud/five-day-ai-agents)
+<p align="center">
+  <a href="https://developers.google.com/profile/badges/events/cloud/five-day-ai-agents">
+    <img src="https://developers.google.com/static/profile/badges/events/cloud/five-day-ai-agents/badge.png"
+         alt="5-Day AI Agents Intensive With Google Badge"
+         width="120"/>
+  </a>
+</p>
 
-</div>
-
-![VendorGuard AI landing page](./docs/screenshot.png)
-
----
-
-## Overview
-
-VendorGuard AI is a multi-agent system that assesses vendor risk from submitted evidence, and refuses to let automation have the final word. Four specialized agents (Evidence, Risk & Security, Policy, Decision) built on the **Google Agent Development Kit** divide the work of extracting claims, scoring risk, checking policy, and drafting a recommendation. Every recommendation is **non-binding**: a human reviewer must approve the final decision before it's recorded, and every finding carries a source-backed evidence trail.
-
-The project was built to demonstrate what "agents for business" should look like in practice, not just capable, but auditable, governed, and resistant to manipulation.
-
-**Why it matters:** a single unverified or manipulated vendor claim shouldn't be able to steer a risk decision. VendorGuard treats every claim as something to be checked against evidence and policy, not taken at face value, and it caught this in testing. One demo vendor (`DataQuick`) contains an embedded prompt-injection attempt that the pipeline is designed to detect and flag rather than obey.
-
-## How It Works
-
-```
-                         React UI
-                            │
-                       FastAPI API
-                            │
-                    Assessment Workflow
-        ┌───────────────────┼───────────────────┐
-        │                   │                   │
-  Evidence Agent    Risk & Security Agent   Policy Agent (MCP)
-        │                   │                   │
-        └───────────────────┼───────────────────┘
-                            │
-                   Decision & Report Agent
-                            │
-                   ── Human Approval Gate ──
-                            │
-              SQLite (local)  →  PostgreSQL (upgrade path)
-```
-
-1. **Evidence agent** extracts and grounds vendor claims against submitted documentation
-2. **Risk & security agent** surfaces security findings and risk signals
-3. **Policy agent** checks findings against governed policy rules, exposed as tools via **MCP (Model Context Protocol)**
-4. **Decision & report agent** drafts a non-binding recommendation with full traceability
-5. **Human review** is the only gate that can convert a recommendation into a recorded decision
-
-## Key Capabilities
-
-- **Evidence traceability.** Every finding is linked back to its source claim; nothing is asserted without a trail
-- **Governed policy checks.** Five MCP-exposed tools enforce policy lookups deterministically, not by agent judgment
-- **Human-in-the-loop approval.** Agents recommend, only a human reviewer decides
-- **Prompt-injection defence.** Validated against three adversarial pytest scenarios, including a live embedded injection in the `DataQuick` demo vendor
-- **Immutable audit logs.** A structured, per-assessment audit trail for every action taken
-- **Deterministic demo mode.** Runs locally without any API key; ADK/Gemini mode available for full agentic behavior
-
-## Demo Vendors
-
-| Vendor | Profile |
-|---|---|
-| **CloudNova** | Low-risk, comparatively complete evidence |
-| **PaySphere** | Medium-risk payment provider with missing controls |
-| **DataQuick** | High-risk PII processor with contradictory claims and an embedded prompt injection |
-
-## Tech Stack
-
-- **Frontend:** React (deployed on Firebase)
-- **Backend:** FastAPI (deployed on Render)
-- **Agents:** Google Agent Development Kit (ADK), built with Google Antigravity
-- **Policy layer:** Model Context Protocol (MCP) server, stdio transport
-- **Storage:** SQLite locally, with a PostgreSQL upgrade path
-- **Testing:** pytest, including adversarial prompt-injection scenarios
-
-## Getting Started
-
-### Requirements
-- Python 3.10+
-- Node.js 20+
-- npm
-- *(Optional)* Gemini API key, for full ADK agent mode
-
-### Backend
-```bash
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r backend\requirements.txt
-cd backend
-uvicorn app.main:app --reload --port 8000
-```
-Open **http://127.0.0.1:8000/docs**
-
-### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
-Open **http://localhost:5173**
-
-### Tests
-```bash
-cd backend
-pytest -q
-```
-
-### MCP Server
-```bash
-python mcp_server\server.py
-```
-Runs over MCP stdio transport and exposes the policy lookup tools.
-
-### ADK / Agentic Mode
-Add `GEMINI_API_KEY` to a local `.env` file, then:
-```bash
-cd backend
-adk web
-```
-Select the `app.agents` package if prompted. The ADK root agent is defined in `backend/app/agents/agent.py`.
-
-### Docker
-```bash
-docker compose up --build
-```
-For public deployment, configure the Cloud Run service, database, and secrets in your own Google Cloud project, and verify the container command and region before going live. Set environment variables through Cloud Run or Secret Manager. Never place secrets in the image.
-
-## Important Limitation
-
-VendorGuard is a demonstration decision-support tool. It does **not** certify real organizations or replace legal, procurement, compliance, or security professionals.
+> Built for the **Kaggle × Google AI Agents Intensive Capstone**, VendorGuard AI evaluates vendor evidence through a multi-agent workflow while keeping high-risk decisions under explicit human control.
 
 ---
 
-<div align="center">
-<sub>Every finding has evidence. Every action has permission. Every decision has a trace.</sub>
-</div>
+## 🚀 Live Demo
+
+**Frontend:** https://vendorguard-web.web.app/
+
+**Repository:** https://github.com/agrima150103/vendorguard-ai
+
+VendorGuard is an evidence-first vendor-risk decision-support system designed to identify:
+
+- unsupported vendor claims
+- contradictory evidence
+- missing security controls
+- manipulated or adversarial content
+- prompt-injection attempts
+- policy violations requiring human review
+
+The system allows agents to analyze and recommend outcomes, but **only a human reviewer can record the final high-risk decision**.
+
+---
+
+## 🎯 Problem
+
+Vendor onboarding often requires analysts to review security questionnaires, policy evidence, compliance claims, and risk indicators manually.
+
+An autonomous AI system introduces another problem: a malicious or contradictory document could influence the model into making an unsafe vendor decision.
+
+VendorGuard addresses both concerns by combining:
+
+**multi-agent analysis + evidence traceability + deterministic policy checks + prompt-injection defense + human approval**
+
+rather than allowing an LLM to make unrestricted final decisions.
+
+---
+
+## ✨ What Makes VendorGuard Different
+
+### 🤖 Four Specialized Agents
+
+VendorGuard separates responsibilities across four Google ADK agents:
+
+1. **Evidence Agent**
+   - extracts vendor claims
+   - tracks evidence provenance
+   - identifies missing or unsupported information
+
+2. **Risk & Security Agent**
+   - evaluates security controls
+   - identifies contradictions
+   - assigns structured risk findings
+
+3. **Policy Agent**
+   - queries governed policy rules through MCP
+   - checks whether proposed actions are permitted
+   - prevents policy decisions from relying only on model judgment
+
+4. **Decision & Report Agent**
+   - consolidates evidence and risk findings
+   - generates a recommendation
+   - produces a structured assessment report
+
+The agents can recommend an outcome, but the final decision remains subject to a **human approval gate**.
+
+---
+
+## 🏗️ Architecture
+
+```text
+                         ┌──────────────────┐
+                         │     React UI     │
+                         └────────┬─────────┘
+                                  │
+                                  ▼
+                         ┌──────────────────┐
+                         │    FastAPI API   │
+                         └────────┬─────────┘
+                                  │
+                    ┌─────────────▼─────────────┐
+                    │    Assessment Workflow    │
+                    └─────────────┬─────────────┘
+                                  │
+          ┌───────────────────────┼───────────────────────┐
+          │                       │                       │
+          ▼                       ▼                       ▼
+ ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+ │ Evidence Agent  │    │ Risk & Security │    │   Policy Agent  │
+ │                 │    │      Agent      │    │   + MCP Tools   │
+ └────────┬────────┘    └────────┬────────┘    └────────┬────────┘
+          │                       │                       │
+          └───────────────────────┼───────────────────────┘
+                                  ▼
+                       ┌────────────────────┐
+                       │ Decision & Report  │
+                       │       Agent        │
+                       └─────────┬──────────┘
+                                 │
+                                 ▼
+                       ┌────────────────────┐
+                       │ Human Approval Gate│
+                       └─────────┬──────────┘
+                                 │
+                                 ▼
+                       ┌────────────────────┐
+                       │ Structured Audit   │
+                       │      Trail         │
+                       └────────────────────┘
