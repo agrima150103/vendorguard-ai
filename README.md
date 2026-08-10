@@ -2,7 +2,7 @@
 
 # VendorGuard AI
 
-**Human-governed, evidence-first vendor risk assessment — built for the Kaggle × Google 5-Day AI Agents Intensive Capstone**
+**Human-governed, evidence-first vendor risk assessment, built for the Kaggle × Google 5-Day AI Agents Intensive Capstone**
 
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/agrima150103/vendorguard-ai)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-vendorguard--web-00C896?style=for-the-badge&logo=firebase)](https://vendorguard-web.web.app/)
@@ -10,15 +10,17 @@
 
 </div>
 
+![VendorGuard AI landing page](./docs/screenshot.png)
+
 ---
 
 ## Overview
 
-VendorGuard AI is a multi-agent system that assesses vendor risk from submitted evidence — and refuses to let automation have the final word. Four specialized agents (Evidence, Risk & Security, Policy, Decision) built on the **Google Agent Development Kit** divide the work of extracting claims, scoring risk, checking policy, and drafting a recommendation. Every recommendation is **non-binding**: a human reviewer must approve the final decision before it's recorded, and every finding carries a source-backed evidence trail.
+VendorGuard AI is a multi-agent system that assesses vendor risk from submitted evidence, and refuses to let automation have the final word. Four specialized agents (Evidence, Risk & Security, Policy, Decision) built on the **Google Agent Development Kit** divide the work of extracting claims, scoring risk, checking policy, and drafting a recommendation. Every recommendation is **non-binding**: a human reviewer must approve the final decision before it's recorded, and every finding carries a source-backed evidence trail.
 
-The project was built to demonstrate what "agents for business" should look like in practice — not just capable, but auditable, governed, and resistant to manipulation.
+The project was built to demonstrate what "agents for business" should look like in practice, not just capable, but auditable, governed, and resistant to manipulation.
 
-**Why it matters:** a single unverified or manipulated vendor claim shouldn't be able to steer a risk decision. VendorGuard treats every claim as something to be checked against evidence and policy, not taken at face value — and it caught this in testing: one demo vendor (`DataQuick`) contains an embedded prompt-injection attempt that the pipeline is designed to detect and flag rather than obey.
+**Why it matters:** a single unverified or manipulated vendor claim shouldn't be able to steer a risk decision. VendorGuard treats every claim as something to be checked against evidence and policy, not taken at face value, and it caught this in testing. One demo vendor (`DataQuick`) contains an embedded prompt-injection attempt that the pipeline is designed to detect and flag rather than obey.
 
 ## How It Works
 
@@ -41,20 +43,20 @@ The project was built to demonstrate what "agents for business" should look like
               SQLite (local)  →  PostgreSQL (upgrade path)
 ```
 
-1. **Evidence agent** — extracts and grounds vendor claims against submitted documentation
-2. **Risk & security agent** — surfaces security findings and risk signals
-3. **Policy agent** — checks findings against governed policy rules, exposed as tools via **MCP (Model Context Protocol)**
-4. **Decision & report agent** — drafts a non-binding recommendation with full traceability
-5. **Human review** — the only gate that can convert a recommendation into a recorded decision
+1. **Evidence agent** extracts and grounds vendor claims against submitted documentation
+2. **Risk & security agent** surfaces security findings and risk signals
+3. **Policy agent** checks findings against governed policy rules, exposed as tools via **MCP (Model Context Protocol)**
+4. **Decision & report agent** drafts a non-binding recommendation with full traceability
+5. **Human review** is the only gate that can convert a recommendation into a recorded decision
 
 ## Key Capabilities
 
-- **Evidence traceability** — every finding is linked back to its source claim; nothing is asserted without a trail
-- **Governed policy checks** — five MCP-exposed tools enforce policy lookups deterministically, not by agent judgment
-- **Human-in-the-loop approval** — agents recommend, only a human reviewer decides
-- **Prompt-injection defence** — validated against three adversarial pytest scenarios, including a live embedded injection in the `DataQuick` demo vendor
-- **Immutable audit logs** — a structured, per-assessment audit trail for every action taken
-- **Deterministic demo mode** — runs locally without any API key; ADK/Gemini mode available for full agentic behavior
+- **Evidence traceability.** Every finding is linked back to its source claim; nothing is asserted without a trail
+- **Governed policy checks.** Five MCP-exposed tools enforce policy lookups deterministically, not by agent judgment
+- **Human-in-the-loop approval.** Agents recommend, only a human reviewer decides
+- **Prompt-injection defence.** Validated against three adversarial pytest scenarios, including a live embedded injection in the `DataQuick` demo vendor
+- **Immutable audit logs.** A structured, per-assessment audit trail for every action taken
+- **Deterministic demo mode.** Runs locally without any API key; ADK/Gemini mode available for full agentic behavior
 
 ## Demo Vendors
 
@@ -123,7 +125,7 @@ Select the `app.agents` package if prompted. The ADK root agent is defined in `b
 ```bash
 docker compose up --build
 ```
-For public deployment, configure the Cloud Run service, database, and secrets in your own Google Cloud project, and verify the container command and region before going live. Set environment variables through Cloud Run or Secret Manager — never place secrets in the image.
+For public deployment, configure the Cloud Run service, database, and secrets in your own Google Cloud project, and verify the container command and region before going live. Set environment variables through Cloud Run or Secret Manager. Never place secrets in the image.
 
 ## Important Limitation
 
