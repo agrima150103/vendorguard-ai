@@ -1,173 +1,237 @@
-<div align="center">
+# 🛡️ VendorGuard AI
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=180&color=0:4338CA,45:2563EB,100:0369A1&text=VendorGuard%20AI&fontSize=44&fontColor=ffffff&fontAlignY=40&desc=Human-Governed%20Multi-Agent%20Vendor%20Risk%20Assessment&descAlignY=62&descSize=16&animation=fadeIn"/>
+### Human-Governed Multi-Agent Vendor Risk Assessment
 
-### **Evidence first. Agents recommend. Humans decide.**
+**Evidence first. Agents recommend. Humans decide.**
 
-Built for the Kaggle × Google 5-Day AI Agents Intensive Capstone
+VendorGuard AI is an evidence-first vendor risk assessment platform built with **Google ADK, Model Context Protocol, FastAPI, and React**.
 
-<br>
+It separates evidence extraction, security analysis, policy enforcement, and decision generation across specialized agents while keeping high-risk decisions behind an explicit human approval gate.
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Open_VendorGuard-2DD4A7?style=for-the-badge)](https://vendorguard-web.web.app/)
-[![Source Code](https://img.shields.io/badge/Source_Code-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/agrima08s010315/vendorguard-ai)
-[![Google AI Agents](https://img.shields.io/badge/Google-5--Day_AI_Agents_Intensive-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://developers.google.com/profile/badges/events/cloud/five-day-ai-agents)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-VendorGuard-2DD4A7?style=flat-square)](https://vendorguard-web.web.app/)
+[![Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/agrima08s010315/vendorguard-ai)
+[![Google AI Agents](https://img.shields.io/badge/Google-AI%20Agents%20Intensive-4285F4?style=flat-square&logo=google&logoColor=white)](https://developers.google.com/profile/badges/events/cloud/five-day-ai-agents)
 
-<br>
+`Google ADK` `MCP` `FastAPI` `React` `Human-in-the-Loop` `pytest` `Docker`
 
-**Google ADK** · **MCP** · **FastAPI** · **React** · **Human-in-the-Loop** · **Prompt-Injection Defence**
+## 🚀 What VendorGuard Does
 
-</div>
+Vendor reviews often involve incomplete questionnaires, conflicting security claims, policy requirements, and evidence spread across multiple documents.
 
----
+Using a single LLM to read everything and directly approve or reject a vendor creates a governance problem.
 
-<p align="center">
-  <img src="docs/assets/vendorguard-dashboard.png" alt="VendorGuard AI assessment dashboard" width="100%">
-</p>
+VendorGuard breaks the process into controlled stages:
 
----
+1. Extract vendor claims and supporting evidence
+2. Analyze security weaknesses and contradictions
+3. Check findings against governed policy
+4. Generate a structured recommendation
+5. Escalate high-risk outcomes for human review
+6. Record the final decision and supporting evidence
 
-## 🧭 What Is VendorGuard?
+A recommendation is never treated as automatic authorization.
 
-VendorGuard AI is an evidence-first, multi-agent vendor risk assessment platform built around one principle:
+## 🖥️ Application
 
-> AI can recommend a decision. It should not silently become the decision-maker.
+<img src="docs/assets/vendorguard-dashboard.png"
+     alt="VendorGuard AI assessment dashboard"
+     width="100%">
 
-Four specialized agents (**Evidence**, **Risk & Security**, **Policy**, **Decision**) collaborate to extract vendor claims, analyze risk, validate policy requirements, and produce a recommendation. High-risk outcomes are then routed through a mandatory human approval gate before a final decision is recorded, and every step in the process leaves a source-backed, auditable trail.
+The dashboard provides a single view of vendor evidence, risk findings, policy results, recommendations, approval state, and audit history.
 
-## 🎯 Why It Exists
+## 🧠 Multi-Agent Workflow
 
-Vendor assessment involves more than assigning a risk score. A vendor may submit incomplete documentation, conflicting security claims, misleading evidence, or even adversarial instructions aimed at influencing an AI system directly. Letting a single autonomous model ingest that evidence and approve the vendor is a governance problem waiting to happen.
+VendorGuard uses four agents with separate responsibilities.
 
-VendorGuard separates evidence, reasoning, policy, and authorization into independent stages, so an LLM recommendation is never treated as the final decision. Policy controls and human review sit outside the recommending agent's authority, by design.
-
-The system is built to catch:
-
-- ⚠️ unsupported or contradictory vendor claims
-- 🔓 missing security controls
-- 🎭 manipulated or misleading content
-- 💉 prompt-injection attempts
-- 📋 policy violations that require escalation
-
----
-
-## 🏗️ Architecture
-
-```text
-                         React UI
-                            │
-                       FastAPI API
-                            │
-                    Assessment Workflow
-        ┌───────────────────┼───────────────────┐
-        │                   │                   │
-  Evidence Agent    Risk & Security Agent   Policy Agent (MCP)
-        │                   │                   │
-        └───────────────────┼───────────────────┘
-                            │
-                   Decision & Report Agent
-                            │
-                   ── Human Approval Gate ──
-                            │
-                     Structured Audit Trail
-                            │
-              SQLite (local)  →  PostgreSQL (upgrade path)
-```
-
-### 🤖 The Four Agents
-
-| Agent | Role |
+| Agent | Responsibility |
 |---|---|
-| **01 · Evidence** | Extracts vendor claims and links every finding back to its source evidence |
-| **02 · Risk & Security** | Analyzes evidence for security weaknesses, missing controls, and contradictions |
-| **03 · Policy (MCP)** | Checks findings against governed policy rules, exposed as tools via Model Context Protocol — deterministic rather than left to agent judgment |
-| **04 · Decision & Report** | Combines evidence, risk findings, and policy results into a structured, non-binding recommendation |
+| **Evidence Agent** | Extracts vendor claims and ties findings to supporting evidence |
+| **Risk & Security Agent** | Identifies weaknesses, missing controls, and contradictory claims |
+| **Policy Agent** | Evaluates findings against deterministic policy rules exposed through MCP |
+| **Decision Agent** | Produces a structured, non-binding recommendation |
 
-### 🚦 The Human Gate
-
-A single manipulated claim should never move directly from vendor input to autonomous approval. VendorGuard instead requires every assessment to pass through:
+The overall flow is:
 
 ```text
-vendor input → evidence validation → risk analysis → policy check → agent recommendation → human authorization → audit record
+Vendor Submission
+       |
+       v
+Evidence Agent
+       |
+       v
+Risk & Security Agent
+       |
+       v
+Policy Agent
+       |
+       v
+Decision Agent
+       |
+       v
+Recommendation
+       |
+       v
+Human Approval
+       |
+       v
+Final Decision + Audit Record
 ```
 
-Only a human reviewer can convert a recommendation into a recorded decision.
+## 🤝 Human-in-the-Loop Governance
 
----
+VendorGuard deliberately separates **recommendation** from **authorization**.
 
-## 💉 Prompt-Injection Defence
+For higher-risk assessments, the agent pipeline can recommend an outcome, but a human reviewer must approve or reject it before the final decision is recorded.
 
-Vendor documents are treated as untrusted input. One demo vendor, `DataQuick`, deliberately contains an embedded prompt-injection attempt, and the pipeline is built so vendor-supplied instructions can never override system instructions, policy rules, agent boundaries, or approval requirements.
+This prevents the AI layer from silently becoming the business decision-maker.
 
-This was validated across **three adversarial pytest scenarios**, including the injected `DataQuick` assessment:
+```text
+Agent Recommendation
+        |
+        v
+   Risk Evaluation
+      /     \
+     /       \
+ Low Risk   High Risk
+    |           |
+    v           v
+ Record      Human Review
+                |
+                v
+          Final Decision
+```
+
+## 🔐 Prompt-Injection Defence
+
+Vendor evidence is treated as untrusted input.
+
+One synthetic vendor, `DataQuick`, intentionally contains an embedded prompt-injection attempt. The workflow is designed so that vendor-supplied instructions cannot override:
+
+- system instructions
+- policy rules
+- agent responsibilities
+- approval requirements
+- audit behaviour
+
+The adversarial behaviour is tested with `pytest`.
 
 ```bash
 cd backend
 pytest -q
 ```
 
-The goal isn't just to flag suspicious text — it's to ensure adversarial vendor content never gains authority over the assessment workflow itself.
+The important distinction is that VendorGuard does not only look for suspicious text. The architecture prevents vendor-provided content from gaining authority over the workflow itself.
+
+## 📋 Policy Enforcement with MCP
+
+Policy evaluation is exposed through a dedicated **Model Context Protocol** server.
+
+Run it with:
+
+```bash
+python mcp_server/server.py
+```
+
+This keeps two questions separate:
+
+> What does the AI recommend?
+
+and
+
+> What does organizational policy permit?
+
+The policy layer is deterministic rather than being left entirely to model interpretation.
 
 ## 🏢 Demo Vendors
 
+Three synthetic vendors are included to make the assessment behaviour easy to reproduce.
+
 | Vendor | Risk | Scenario |
 |---|:---:|---|
-| 🟢 **CloudNova** | Low | Comparatively complete evidence |
-| 🟡 **PaySphere** | Medium | Missing controls, incomplete evidence |
-| 🔴 **DataQuick** | High | Contradictory claims and an embedded prompt injection |
+| **CloudNova** | 🟢 Low | Comparatively complete evidence |
+| **PaySphere** | 🟡 Medium | Missing controls and incomplete evidence |
+| **DataQuick** | 🔴 High | Contradictory claims and prompt-injection content |
 
-Synthetic vendors keep the governance behaviour reproducible, safe to demo, and easy to evaluate across risk levels without involving real companies.
-
----
+Using synthetic vendors keeps the demo reproducible and avoids making claims about real organizations.
 
 ## ⚙️ Key Engineering Features
 
 | Capability | Implementation |
 |---|---|
 | Multi-agent orchestration | Google Agent Development Kit |
-| Agent separation | Evidence, Risk, Policy, Decision |
-| Policy governance | MCP policy server |
-| Human-in-the-loop | Mandatory approval for high-risk outcomes |
-| Prompt-injection defence | Untrusted-evidence handling + adversarial tests |
+| Agent boundaries | Evidence, Risk, Policy, Decision |
+| Policy enforcement | Model Context Protocol |
+| Human review | Approval gate for high-risk outcomes |
+| Prompt-injection handling | Untrusted evidence + adversarial tests |
 | Evidence traceability | Source-backed findings |
-| Auditability | Structured per-assessment audit history |
+| Auditability | Structured assessment history |
 | API | FastAPI |
 | Frontend | React |
 | Local persistence | SQLite |
-| Production path | PostgreSQL |
 | Testing | pytest |
 | Deployment | Firebase + Render |
-| Local fallback | Deterministic, key-free mode |
+| Offline/demo execution | Deterministic key-free fallback |
 
-## 🔌 MCP Policy Layer
+## 🧪 Evaluation and Testing
 
-VendorGuard exposes policy rules as tools through a dedicated Model Context Protocol server:
+Testing focuses on the behaviour that matters most in an agentic risk system.
+
+Current evaluation areas include:
+
+- prompt-injection attempts
+- contradictory vendor evidence
+- unsupported claims
+- missing evidence
+- policy violations
+- high-risk escalation
+- approval enforcement
+- deterministic fallback behaviour
+
+Run the tests with:
 
 ```bash
-python mcp_server/server.py
+cd backend
+pytest -q
 ```
-
-The server runs on MCP stdio transport. This keeps "what does the model recommend?" and "what does policy allow?" as two separate questions, which is central to the system's governance model.
 
 ## 🧠 Google ADK Mode
 
-Agent definitions live under `backend/app/agents/`, with the root ADK agent defined in `backend/app/agents/agent.py`. With a Gemini API key configured:
+The agent definitions live under:
+
+```text
+backend/app/agents/
+```
+
+The root ADK agent is defined in:
+
+```text
+backend/app/agents/agent.py
+```
+
+With a Gemini API key configured:
 
 ```bash
 cd backend
 adk web
 ```
 
-VendorGuard also runs in a deterministic, key-free demonstration mode, so the core assessment workflow works without any external model credentials.
-
----
+VendorGuard can also run in a deterministic key-free mode so the core workflow remains demonstrable without external model credentials.
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React, Vite, Firebase Hosting
-- **Backend:** Python, FastAPI, Pydantic, deployed on Render
-- **Agents & AI:** Google Agent Development Kit, Gemini, Google Antigravity, Model Context Protocol
-- **Storage:** SQLite locally, PostgreSQL as the production upgrade path
-- **Quality & security:** pytest, prompt-injection testing, human approval gates, evidence traceability, structured audit logs
+| Layer | Technology |
+|---|---|
+| Agent Orchestration | Google ADK |
+| Policy Integration | Model Context Protocol |
+| Backend | Python, FastAPI, Pydantic |
+| Frontend | React, Vite |
+| Model | Gemini |
+| Local Database | SQLite |
+| Production Database Path | PostgreSQL |
+| Testing | pytest |
+| Containerization | Docker |
+| Frontend Hosting | Firebase Hosting |
+| Backend Hosting | Render |
 
 ## 📁 Repository Structure
 
@@ -179,136 +243,229 @@ vendorguard-ai/
 │       ├── api/
 │       ├── models/
 │       └── services/
+│
 ├── frontend/
+│
 ├── mcp_server/
+│
 ├── evaluations/
+│
 ├── sample_data/
+│
 ├── docs/
 │   └── assets/
+│
 ├── .github/
 │   └── workflows/
+│
 ├── Dockerfile
 ├── docker-compose.yml
 ├── render.yaml
 └── README.md
 ```
 
----
+## ⚙️ Running Locally
 
-## 🚀 Running Locally
+### Requirements
 
-**Requirements**
 - Python 3.10+
 - Node.js 20+
 - npm
-- *(Optional)* Gemini API key, for full ADK agent mode
+- Gemini API key for full ADK mode, optional
 
-### Backend
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/agrima08s010315/vendorguard-ai.git
+cd vendorguard-ai
+```
+
+### 2. Create the Python environment
+
 ```bash
 python -m venv .venv
 ```
+
 Windows:
+
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
-Install and run:
+
+macOS / Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+### 3. Install backend dependencies
+
 ```bash
 pip install -r backend/requirements.txt
+```
+
+### 4. Start the backend
+
+```bash
 cd backend
 uvicorn app.main:app --reload --port 8000
 ```
-Swagger docs at **http://127.0.0.1:8000/docs**
 
-### Frontend
+Swagger documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### 5. Start the frontend
+
+Open another terminal:
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Open **http://localhost:5173**
 
-### Tests
+Open:
+
+```text
+http://localhost:5173
+```
+
+### 6. Run tests
+
 ```bash
 cd backend
 pytest -q
 ```
-Includes adversarial cases covering prompt-injection behaviour and governed assessment flows.
 
-### Docker
+### 7. Run with Docker
+
+From the project root:
+
 ```bash
 docker compose up --build
 ```
 
 ## ☁️ Deployment
 
-Currently deployed with the frontend on **Firebase Hosting** and the backend on **Render**. The architecture can also be containerized for Google Cloud Run; configure the service, database, and secrets in your own Google Cloud project, and supply environment variables through Cloud Run or Secret Manager rather than committing them to the image or repository.
+VendorGuard is currently deployed using:
 
----
+| Component | Service |
+|---|---|
+| Frontend | Firebase Hosting |
+| Backend | Render |
+| Containerization | Docker |
 
-## 🧩 Design Principles
+Live application:
 
-1. **Evidence before conclusions.** Every risk finding should trace back to source evidence.
-2. **Separate responsibilities.** Evidence extraction, security analysis, policy enforcement, and recommendation generation stay independent.
-3. **Policy outranks recommendation.** The model cannot redefine organizational policy.
-4. **Agents recommend, humans authorize.** High-risk decisions require explicit human approval.
-5. **External evidence is untrusted by default.** Vendor documents never inherit system authority.
-6. **Every decision leaves a trace.** Evidence, findings, policy checks, and decisions are preserved for later review.
+**[Open VendorGuard AI](https://vendorguard-web.web.app/)**
 
-## ⚠️ Important Limitation
+The containerized backend can also be adapted for Cloud Run. Secrets and model credentials should be supplied through environment variables or a managed secret store rather than committed to the repository.
 
-VendorGuard is a demonstration decision-support system. It does not certify real organizations and is not a replacement for qualified legal, procurement, compliance, cybersecurity, or risk-management professionals.
+## 🎯 Design Decisions
 
----
+### Evidence before conclusions
 
-<div align="center">
+A finding should be connected to evidence rather than generated as an unsupported claim.
 
-**Every finding has evidence. Every action has permission. Every decision has a trace.**
+### Separate agent responsibilities
 
----
+Evidence extraction, security analysis, policy enforcement, and recommendation generation remain separate.
+
+### Policy is not an LLM opinion
+
+Policy checks live outside the recommendation agent.
+
+### Humans authorize higher-risk outcomes
+
+Agents can support a decision. They do not silently finalize sensitive outcomes.
+
+### External content is untrusted
+
+Vendor documents never inherit system-level authority.
+
+### Decisions should be reviewable
+
+Evidence, findings, policy checks, recommendations, and final outcomes remain available for later review.
+
+## 📌 What This Project Demonstrates
+
+VendorGuard explores several problems that matter in production agentic systems:
+
+- multi-agent orchestration
+- agent responsibility boundaries
+- Model Context Protocol integration
+- evidence provenance
+- prompt-injection resistance
+- policy enforcement
+- human-in-the-loop governance
+- deterministic fallback behaviour
+- API design
+- full-stack deployment
+- auditable decision workflows
+
+## ⚠️ Scope
+
+VendorGuard is a **decision-support and engineering demonstration system**.
+
+It does not certify vendors and should not replace professional legal, procurement, compliance, cybersecurity, or risk-management review.
 
 ## 👩‍💻 Author
 
-**Agrima Saxena**
+### Agrima Saxena
+
 **Software Engineering · Applied AI · Multi-Agent Systems**
 
-<br>
-
 <table>
-  <tr>
-    <td width="60">
-      <a href="https://www.linkedin.com/in/agrima-saxena-142960426/" title="LinkedIn">
-        <img src="https://img.icons8.com/color/48/linkedin.png" width="34" height="34" alt="LinkedIn"/>
-      </a>
-    </td>
-    <td width="60">
-      <a href="mailto:agrimalc@gmail.com" title="Email">
-        <img src="https://img.icons8.com/color/48/gmail-new.png" width="34" height="34" alt="Email"/>
-      </a>
-    </td>
-    <td width="60">
-      <a href="https://github.com/agrima08s010315" title="GitHub">
-        <img src="https://img.icons8.com/ios-glyphs/48/ffffff/github.png" width="34" height="34" alt="GitHub"/>
-      </a>
-    </td>
-  </tr>
+<tr>
+
+<td width="60">
+<a href="https://www.linkedin.com/in/agrima-saxena-142960426/" title="LinkedIn">
+<img src="https://img.icons8.com/color/48/linkedin.png"
+     width="32"
+     height="32"
+     alt="LinkedIn"/>
+</a>
+</td>
+
+<td width="60">
+<a href="mailto:agrimalc@gmail.com" title="Email">
+<img src="https://img.icons8.com/color/48/gmail-new.png"
+     width="32"
+     height="32"
+     alt="Email"/>
+</a>
+</td>
+
+<td width="60">
+<a href="https://github.com/agrima08s010315" title="GitHub">
+<img src="https://img.icons8.com/ios-glyphs/48/ffffff/github.png"
+     width="32"
+     height="32"
+     alt="GitHub"/>
+</a>
+</td>
+
+</tr>
 </table>
 
-<br>
-
 <a href="https://vendorguard-web.web.app/">
-  <img src="https://img.shields.io/badge/Live%20Demo-Open%20VendorGuard-2DD4A7?style=flat-square" alt="VendorGuard Live Demo"/>
+<img src="https://img.shields.io/badge/Live%20Demo-Open%20VendorGuard-2DD4A7?style=flat-square"
+     alt="VendorGuard Live Demo"/>
 </a>
+
 <a href="https://github.com/agrima08s010315/vendorguard-ai">
-  <img src="https://img.shields.io/badge/GitHub-View%20Repository-181717?style=flat-square&logo=github&logoColor=white" alt="VendorGuard Repository"/>
+<img src="https://img.shields.io/badge/GitHub-View%20Repository-181717?style=flat-square&logo=github&logoColor=white"
+     alt="VendorGuard Repository"/>
 </a>
+
 <a href="https://developers.google.com/profile/badges/events/cloud/five-day-ai-agents">
-  <img src="https://img.shields.io/badge/Google-AI%20Agents%20Badge-4285F4?style=flat-square&logo=google&logoColor=white" alt="Google AI Agents Badge"/>
+<img src="https://img.shields.io/badge/Google-AI%20Agents%20Badge-4285F4?style=flat-square&logo=google&logoColor=white"
+     alt="Google AI Agents Badge"/>
 </a>
 
 <br><br>
 
-⭐ **If you found VendorGuard useful or interesting, consider starring the repository.**
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=100&section=footer&color=0:4338CA,45:2563EB,100:0369A1"/>
-
-</div>
+⭐ **If you found the architecture useful or interesting, consider starring the repository.**
