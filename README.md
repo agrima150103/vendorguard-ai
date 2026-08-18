@@ -9,7 +9,7 @@ VendorGuard AI is an evidence-first vendor risk assessment platform built with *
 It separates evidence extraction, security analysis, policy enforcement, and decision generation across specialized agents while keeping high-risk decisions behind an explicit human approval gate.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-VendorGuard-2DD4A7?style=flat-square)](https://vendorguard-web.web.app/)
-[![Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/agrima08s010315/vendorguard-ai)
+[![Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/agcodes0315/vendorguard-ai)
 [![Google AI Agents](https://img.shields.io/badge/Google-AI%20Agents%20Intensive-4285F4?style=flat-square&logo=google&logoColor=white)](https://developers.google.com/profile/badges/events/cloud/five-day-ai-agents)
 
 `Google ADK` `MCP` `FastAPI` `React` `Human-in-the-Loop` `pytest` `Docker`
@@ -276,7 +276,7 @@ vendorguard-ai/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/agrima08s010315/vendorguard-ai.git
+git clone https://github.com/agcodes0315/vendorguard-ai.git
 cd vendorguard-ai
 ```
 
@@ -440,7 +440,7 @@ It does not certify vendors and should not replace professional legal, procureme
 </td>
 
 <td width="60">
-<a href="https://github.com/agrima08s010315" title="GitHub">
+<a href="https://github.com/agcodes0315" title="GitHub">
 <img src="https://img.icons8.com/ios-glyphs/48/ffffff/github.png"
      width="32"
      height="32"
@@ -456,7 +456,7 @@ It does not certify vendors and should not replace professional legal, procureme
      alt="VendorGuard Live Demo"/>
 </a>
 
-<a href="https://github.com/agrima08s010315/vendorguard-ai">
+<a href="https://github.com/agcodes0315/vendorguard-ai">
 <img src="https://img.shields.io/badge/GitHub-View%20Repository-181717?style=flat-square&logo=github&logoColor=white"
      alt="VendorGuard Repository"/>
 </a>
